@@ -20,7 +20,6 @@ jobs:
           docker-compose -f docker-compose.yml -f .github/docker-compose-github.yml up -d
       - name: Install requirements
         run: make exec-requirements
-
       - name: Test quality
         run: make exec-quality
 
@@ -30,17 +29,17 @@ jobs:
       matrix:
         TOXENV: ['django111']
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup docker containers
-      run: |
-        docker-compose -f docker-compose.yml -f .github/docker-compose-github.yml up -d
-    - name: Install requirements
-      run: make exec-requirements
-    - name: Run 'make exec-static'
-      run: make exec-static
-    - name: Run the tests
-      run: |
-        TOXENV=${{ matrix.TOXENV }} docker exec -i credentials bash -c '
-          source /edx/app/credentials/credentials_env &&
-          cd /edx/app/credentials/credentials/ &&
-          xvfb-run make tests'
+      - uses: actions/checkout@v2
+      - name: Setup docker containers
+        run: |
+          docker-compose -f docker-compose.yml -f .github/docker-compose-github.yml up -d
+      - name: Install requirements
+        run: make exec-requirements
+      - name: Run 'make exec-static'
+        run: make exec-static
+      - name: Run the tests
+        run: |
+          TOXENV=${{ matrix.TOXENV }} docker exec -i credentials bash -c '
+            source /edx/app/credentials/credentials_env &&
+            cd /edx/app/credentials/credentials/ &&
+            xvfb-run make tests'

@@ -11,7 +11,7 @@ services:
       - DB_ENGINE=django.db.backends.mysql
       - DB_HOST=db
       - DB_NAME=credentials
-      - DB_PASSWORD=''
+      - DB_PASSWORD=password
       - DB_PORT=3306
       - DB_USER=root
       - DJANGO_SETTINGS_MODULE=credentials.settings.test
