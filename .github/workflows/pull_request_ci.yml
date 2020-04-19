@@ -39,4 +39,8 @@ jobs:
     - name: Run 'make exec-static'
       run: make exec-static
     - name: Run the tests
-      run: TOXENV=${{ matrix.TOXENV }} COMPOSE_INTERACTIVE_NO_CLI=1 make exec-tests
+      run: |
+        TOXENV=${{ matrix.TOXENV }} docker exec -i credentials bash -c '
+          source /edx/app/credentials/credentials_env &&
+          cd /edx/app/credentials/credentials/ &&
+          xvfb-run make tests'
