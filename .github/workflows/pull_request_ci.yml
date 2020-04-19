@@ -1,0 +1,42 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ 'develop', 'master', 'release-candidate', 'danial/add-unit-tests-github-actions' ]
+  pull_request:
+    branches: [ 'develop', 'master', 'release-candidate', 'danial/add-unit-tests-github-actions' ]
+
+jobs:
+
+  quality-tests:
+    runs-on: ubuntu-latest
+    # strategy:
+    #   matrix:
+    #     openedx-release: ['ironwood.master']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup docker containers
+        run: |
+          docker-compose -f docker-compose.yml -f .github/docker-compose-github.yml up -d
+      - name: Install requirements
+        run: make exec-requirements
+
+      - name: Test quality
+        run: make exec-quality
+
+  python-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        TOXENV: ['django111']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup docker containers
+      run: |
+        docker-compose -f docker-compose.yml -f .github/docker-compose-github.yml up -d
+    - name: Install requirements
+      run: make exec-requirements
+    - name: Run 'make exec-static'
+      run: make exec-static
+    - name: Run the tests
+      run: TOXENV=${{ matrix.TOXENV }} make exec-tests
