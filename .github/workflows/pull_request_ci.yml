@@ -39,4 +39,4 @@ jobs:
     - name: Run 'make exec-static'
       run: make exec-static
     - name: Run the tests
-      run: TOXENV=${{ matrix.TOXENV }} make exec-tests
+      run: TOXENV=${{ matrix.TOXENV }} COMPOSE_INTERACTIVE_NO_CLI=1 make exec-tests
